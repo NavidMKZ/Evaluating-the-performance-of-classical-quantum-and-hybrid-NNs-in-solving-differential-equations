@@ -408,26 +408,138 @@ The results therefore should **not** be interpreted as evidence that quantum neu
 
 ---
 
-# Physics-Informed Quantum Feature Maps
+# Physics-Informed Quantum Feature Maps and the Shooting-Based Eigenvalue Algorithm
 
-A central idea of this work is to incorporate information about the underlying physical solution into the design of the quantum feature map.
+Two important methodological contributions of this work are the use of **physics-informed quantum feature maps** and the development of a **shooting-based unsupervised neural-network algorithm for eigenvalue problems**.
 
-The general approach is:
+The first idea is used throughout the quantum and hybrid quantum models to incorporate known physical characteristics of the target solution directly into the quantum circuit.
+
+The second idea is developed specifically for the **time-independent Schrödinger equation**, where the objective is to determine both the wave function and its corresponding energy eigenvalue.
+
+---
+
+## Physics-Informed Quantum Feature Maps
+
+A central idea of this work is to incorporate information about the expected physical behavior of the solution into the design of the quantum feature map.
+
+Instead of using an identical generic encoding for every differential equation, the feature-map structure is adapted to the mathematical characteristics of each problem.
+
+The overall strategy can be summarized as:
 
 **Physical behavior → Feature-map design → Quantum representation → Variational optimization**
 
-This allows the quantum circuit to reflect known qualitative properties of the solution.
+This allows the quantum circuit to encode useful information about the target solution before the variational parameters are optimized.
 
-Examples studied in this work include:
+The three problems use different physics-motivated encoding strategies:
 
-| Physical problem | Relevant behavior | Feature-map idea |
+| Physical problem | Relevant behavior | Feature-map strategy |
 |---|---|---|
-| Damped harmonic oscillator | Exponential decay and oscillation | Exponential and `RY` encoding |
+| Damped harmonic oscillator | Exponential decay and oscillatory behavior | Exponential gates combined with `RY` rotations |
 | Schwarzschild metric | Approximate inverse-radial behavior | Physics-motivated nonlinear encoding |
-| 2D Schrödinger equation | Oscillatory wave function | Oscillatory `RY` encoding |
+| 2D Schrödinger equation | Oscillatory wave-function behavior | `RY`-based oscillatory encoding |
 
-The goal is to improve the representation of the target function while keeping the quantum circuits relatively small.
+For the damped harmonic oscillator, the feature map incorporates both the exponentially decaying envelope and the oscillatory component of the analytical solution.
 
+For the Schwarzschild problem, the feature map is designed around the inverse-radial behavior of the metric functions.
+
+For the two-dimensional Schrödinger equation, the encoding is designed to provide sufficiently oscillatory behavior to represent not only the ground state but also excited states.
+
+This physics-informed design is intended to improve the expressivity of the quantum models while keeping the circuits relatively shallow and using a limited number of qubits.
+
+---
+
+# Shooting-Based Unsupervised Algorithm for the Schrödinger Equation
+
+A second major contribution of this work is the development of a **new unsupervised neural-network algorithm for eigenvalue problems**, based on combining the ideas of the **JMP method** with a **shooting approach**.
+
+The method is developed for the time-independent Schrödinger equation of a particle in a two-dimensional infinite potential box.
+
+Unlike a conventional supervised approach, the network does not require precomputed wave functions or energy eigenvalues as training targets. Instead, the neural network learns the wave function and energy directly by minimizing a physics-based loss.
+
+The total loss is composed of two terms:
+
+**Total loss = Physics loss + Normalization loss**
+
+The physics loss is constructed from the residual of the Schrödinger equation, while the normalization loss constrains the predicted wave function to satisfy the required normalization condition.
+
+A particularly important aspect of the proposed approach is the treatment of the energy eigenvalue.
+
+## Energy Shooting Procedure
+
+The neural network contains a parameter responsible for predicting the energy. Instead of requiring the network to discover every excited-state energy directly from a fixed initial condition, the proposed algorithm introduces a **shooting energy increment**.
+
+The procedure can be summarized as follows:
+
+1. The neural network begins by predicting an energy associated with an initial state.
+2. A shooting increment, **ΔE**, is applied to the energy.
+3. The network is optimized for the current energy range.
+4. When the predicted energy approaches the current target range, the shooting procedure advances the energy toward the next eigenvalue.
+5. The process is repeated until the network reaches the next energy level.
+6. The same procedure can then be continued to obtain subsequent excited states.
+
+The hyperparameters used in the reported experiments are:
+
+| Parameter | Value |
+|---|---:|
+| Shooting-energy increment, ΔE | 1 |
+| Energy-range parameter, δE | 0.5 |
+| Energy adjustment parameter, δe | 1 |
+
+The ground state is obtained first, and the same procedure is then continued to identify higher excited states.
+
+The number of optimization iterations is increased for successive excited states. The reported experiments use **1000 iterations for the ground state**, with an additional **1000 iterations for each subsequent excited state**.
+
+---
+
+## Boundary Conditions
+
+The wave function is constructed using a multiplicative transformation that automatically enforces the required Dirichlet boundary conditions.
+
+The neural-network outputs are multiplied by a function that vanishes at the boundaries of the spatial domain.
+
+In conceptual form:
+
+**Predicted wave function = Boundary-enforcing function × Neural-network outputs**
+
+This construction ensures that the predicted wave function approaches zero at the boundaries of the two-dimensional box without requiring separate boundary-condition terms in the loss.
+
+The spatial domain used in the experiments is:
+
+**x, y ∈ [0, 2]**
+
+A total of **100 training points** and **400 test points** are used.
+
+---
+
+## Why the Shooting Approach Is Important
+
+The proposed shooting-based formulation provides several advantages for the eigenvalue problem.
+
+First, it avoids the need for additional loss terms specifically designed to force the network toward different excited states. The physics loss and normalization loss remain the central components of the optimization.
+
+Second, the shooting procedure provides a mechanism for moving from one energy eigenvalue to the next instead of requiring a separate completely independent optimization procedure for every state.
+
+Third, the method allows the optimization to progress through successive energy levels by controlling the energy increment, making the identification of excited states more systematic.
+
+An important result reported in the paper is that the **quantum neural network can identify the energy levels without requiring the shooting-energy procedure used by the classical and hybrid approaches**, while still achieving competitive accuracy for the Schrödinger-equation problem.
+
+The hybrid quantum neural network achieves the strongest overall performance for the reported wave-function and energy predictions, while the quantum model shows particularly strong performance for the ground-state wave function. ([nature.com](https://www.nature.com/articles/s41598-025-22950-y?utm_source=chatgpt.com))
+
+---
+
+## Relationship Between the Two Contributions
+
+The two ideas developed in this work address different parts of the differential-equation-solving problem:
+
+**Physics-informed quantum feature maps**  
+→ improve how physical information is encoded into quantum neural networks.
+
+**Shooting-based unsupervised algorithm**  
+→ provides a strategy for solving eigenvalue problems and systematically reaching higher energy states.
+
+Together, these approaches allow the study to investigate not only whether quantum and hybrid neural networks can solve differential equations, but also how **problem-specific physical knowledge and numerical-solution strategies can be incorporated into neural-network architectures**.
+
+These ideas form an important part of the overall methodology of the work, alongside the comparative evaluation of classical, quantum, and hybrid quantum neural networks. ([nature.com](https://www.nature.com/articles/s41598-025-22950-y?utm_source=chatgpt.com))
 ---
 
 # Software and Libraries

@@ -355,7 +355,7 @@ The study therefore evaluates not only prediction accuracy but also the paramete
 
 The study also compares the optimization behavior of the three model types.
 
-The reported results show that the quantum and hybrid models can converge faster than the classical models in the investigated experiments.
+The reported results show that the quantum and hybrid models can converge faster to the solutions than the classical models in the investigated experiments.
 
 However, convergence behavior depends on the problem and parameter initialization. Quantum models can also exhibit greater variability and optimization difficulties, particularly for some excited-state Schrödinger-equation configurations.
 

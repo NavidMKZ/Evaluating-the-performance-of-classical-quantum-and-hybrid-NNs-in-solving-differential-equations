@@ -308,7 +308,7 @@ For the classical and hybrid models, the configurations correspond to hidden-lay
 
 - 10;
 - 30;
-- 50.
+- 50 .
 
 For the quantum models, the configurations correspond to:
 

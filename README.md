@@ -1,0 +1,1 @@
+# Evaluating-the-performance-of-classical-quantum-and-hybrid-NNs-in-solving-differential-equations

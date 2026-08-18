@@ -1,1 +1,1 @@
-# Evaluating-the-performance-of-classical-quantum-and-hybrid-NNs-in-solving-differential-equations
+# Evaluating the performance of classical, quantum, and hybrid quantum neural networks in solving differential equations

@@ -5,42 +5,39 @@ This repository contains the code and trained models associated with the researc
 > **Evaluating the performance of classical, quantum, and hybrid quantum neural networks in solving differential equations**
 
 **Navid Markazi and Behrouz Mirza**  
-*Scientific Reports*, Volume 15, Article 39332 (2025)
+*Scientific Reports*, Volume 15, Article 39332, 2025
 
 **DOI:** [10.1038/s41598-025-22950-y](https://doi.org/10.1038/s41598-025-22950-y)  
 **Published:** 10 November 2025
 
 [Read the paper on Nature](https://www.nature.com/articles/s41598-025-22950-y)  
-[View the source code on GitHub](https://github.com/NavidMKZ/Evaluating-the-performance-of-classical-quantum-and-hybrid-NNs-in-solving-differential-equations)
+[View the GitHub repository](https://github.com/NavidMKZ/Evaluating-the-performance-of-classical-quantum-and-hybrid-NNs-in-solving-differential-equations)
 
 ---
 
 ## Overview
 
-This project investigates the use of **classical neural networks (CNNs), quantum neural networks (QNNs), and hybrid quantum-classical neural networks (HQNNs)** for solving differential equations.
+This project investigates the performance of **classical neural networks (CNNs), quantum neural networks (QNNs), and hybrid quantum neural networks (HQNNs)** for solving differential equations.
 
-The work combines physics-informed machine learning with variational quantum circuits and evaluates the three neural-network paradigms in terms of:
+The study evaluates these three model types using both supervised and unsupervised learning approaches and compares their:
 
 - prediction accuracy;
-- optimization and convergence behavior;
-- point-wise prediction error;
+- convergence behavior;
 - number of trainable parameters;
-- robustness to parameter initialization; and
+- sensitivity to parameter initialization; and
 - performance across different physical problems.
 
-Three problems with different mathematical and physical structures are considered:
+Three problems are investigated:
 
 1. **Damped harmonic oscillator**
 2. **Einstein field equations for the Schwarzschild metric**
 3. **Time-independent Schrödinger equation for a particle in a two-dimensional infinite potential box**
 
-Physics-informed supervised neural networks are used for the damped harmonic oscillator and Einstein field equations. For the Schrödinger equation, an unsupervised neural-network approach based on a shooting-method formulation is developed for solving the eigenvalue problem.
+Physics-informed supervised neural networks are used for the damped harmonic oscillator and Einstein field equations. For the Schrödinger equation, an unsupervised neural-network method based on the shooting method is developed to obtain the eigenvalues and corresponding wave functions.
 
 ---
 
 ## Research Paper
-
-The complete scientific description of the methods, mathematical formulation, experiments, and results is available in the published article:
 
 **Markazi, N., & Mirza, B. (2025).**  
 *Evaluating the performance of classical, quantum, and hybrid quantum neural networks in solving differential equations.*  
@@ -48,7 +45,7 @@ The complete scientific description of the methods, mathematical formulation, ex
 
 **DOI:** [https://doi.org/10.1038/s41598-025-22950-y](https://doi.org/10.1038/s41598-025-22950-y)
 
-The repository is intended to provide the computational implementation accompanying the publication.
+The complete mathematical formulation, model architectures, experimental setup, and detailed results are provided in the published article.
 
 ---
 
@@ -56,21 +53,21 @@ The repository is intended to provide the computational implementation accompany
 
 ## 1. Damped Harmonic Oscillator
 
-The first problem considers an underdamped harmonic oscillator and is solved using a **physics-informed neural-network formulation**.
+The first problem considers an underdamped harmonic oscillator and uses a physics-informed neural-network formulation to learn its solution.
 
-The neural networks learn the solution of the governing differential equation while satisfying the relevant initial condition. The training data are sampled from the time interval
+The model is trained over the time interval:
 
-\[
-t \in [0,8].
-\]
+**t ∈ [0, 8]**
 
-A total of **124 points** are used for training and **500 points** are reserved for testing. Because the initial-condition point is included in the batches, each effective training batch contains 32 data points.
+A total of **124 training points** and **500 test points** are used.
 
-### Classical neural network
+The initial condition is incorporated directly into the physics-informed formulation.
 
-The classical architecture contains **three hidden layers** with the **SiLU** activation function.
+### Classical Neural Network
 
-The network produces two outputs, which are multiplied together to construct the final approximation to the solution. This multiplicative output structure was introduced to improve expressivity without increasing the network depth substantially. The same structural idea is used in the corresponding hybrid architecture.
+The classical network contains **three hidden layers** with the **SiLU** activation function.
+
+The model produces two outputs that are combined through a multiplicative structure to construct the final approximation to the solution.
 
 Three classical configurations are investigated:
 
@@ -80,23 +77,15 @@ Three classical configurations are investigated:
 | 2 | 30 |
 | 3 | 50 |
 
-The classical learning rate is **0.001**.
+The learning rate is **0.001**.
 
-### Quantum neural network
+### Quantum Neural Network
 
 The QNN uses **two qubits**.
 
-Its physics-informed quantum feature map combines:
+The quantum feature map combines exponential gates with `RY` rotations and CNOT entangling operations. The feature-map design is motivated by the qualitative structure of the damped-oscillator solution, which contains both an exponentially decaying component and oscillatory behavior.
 
-- exponential gates;
-- \(R_Y\) rotation gates; and
-- CNOT entangling gates.
-
-The feature-map structure is motivated by the qualitative form of the damped oscillator solution, which contains both an exponentially decaying envelope and oscillatory behavior.
-
-The exponential part is therefore used to represent the decaying component, while the \(R_Y\) component represents oscillatory behavior. The variational circuit contains \(R_Y\) rotations and CNOT entanglement.
-
-Three quantum configurations are investigated using:
+Three quantum configurations are investigated:
 
 | Configuration | Variational layers |
 |---|---:|
@@ -104,15 +93,15 @@ Three quantum configurations are investigated using:
 | 2 | 2 |
 | 3 | 3 |
 
-For this problem, the QNN uses a learning rate of **0.05**.
+The QNN learning rate is **0.05**.
 
-### Hybrid quantum neural network
+### Hybrid Quantum Neural Network
 
 The hybrid architecture combines a classical neural network with a three-qubit quantum circuit.
 
-For this problem, the classical component uses a single hidden layer and produces outputs that are encoded into \(R_Y\) gates in the quantum circuit. The circuit contains four quantum layers and uses linear CNOT entanglement. The outputs are subsequently combined using the same multiplicative structure used by the classical network.
+The classical network produces values that are encoded into quantum rotation gates. The quantum circuit then processes the encoded information using variational and entangling operations. The resulting quantum outputs are used to construct the final prediction.
 
-The three HQNN configurations use hidden-layer sizes of:
+Three hybrid configurations are investigated using hidden-layer sizes of:
 
 - 10 neurons;
 - 30 neurons;
@@ -120,51 +109,54 @@ The three HQNN configurations use hidden-layer sizes of:
 
 The hybrid learning rate is **0.001**.
 
-### Representative result
+### Representative Result
 
-For random seed 42, the lowest reported MSE values for the damped harmonic oscillator were:
+For the representative seed-42 experiment, the lowest reported MSE values are:
 
 | Model | Lowest MSE |
 |---|---:|
-| Classical | \(6.09\times10^{-7}\) |
-| Quantum | \(2.52\times10^{-12}\) |
-| Hybrid | \(5.13\times10^{-8}\) |
+| Classical | 6.09 × 10⁻⁷ |
+| Quantum | 2.52 × 10⁻¹² |
+| Hybrid | 5.13 × 10⁻⁸ |
 
-For this particular experiment, the QNN produced the lowest MSE, followed by the HQNN and then the classical network. The paper reports the corresponding reductions in MSE relative to the classical result as 99.99% for the QNN and 91.57% for the HQNN.
+For this experiment, the QNN obtained the lowest MSE, followed by the HQNN and the classical neural network.
 
 ---
 
 # 2. Einstein Field Equations for the Schwarzschild Metric
 
-The second problem investigates the Einstein field equations associated with the **Schwarzschild metric**.
+The second problem investigates the Einstein field equations associated with the Schwarzschild metric.
 
-The neural networks learn the relevant metric functions while satisfying the Einstein-equation residuals and an asymptotic boundary condition.
+The neural networks learn the metric functions while satisfying the corresponding Einstein-equation residuals and the required asymptotic boundary behavior.
 
-The radial domain is
+The radial domain is:
 
-\[
-r \in [100,300].
-\]
+**r ∈ [100, 300]**
 
-The computational setup uses **128 training points** and **500 test points**. Training is performed for **20 epochs**, with **50 iterations per epoch** and a batch size of **32**. The calculations use \(G=1\) and \(M=15\).
+The experimental setup uses **128 training points** and **500 test points**.
 
-The loss function includes weighted contributions from the relevant Einstein-equation terms and a boundary-condition term. The weights are
+The calculations use:
 
-\[
-\{W_0,W_1,W_2,W_3\}
-=
-\{10,10,0.001,10\}.
-\]
+- **G = 1**
+- **M = 15**
 
-The boundary condition enforces the appropriate asymptotic behavior of the metric component \(g_{00}\), recovering the expected Schwarzschild/Newtonian limit at large radial distances.
+### Loss Function
 
-### Classical neural network
+The loss contains weighted contributions from the relevant Einstein-equation residuals and the boundary condition.
 
-The classical architecture contains **six hidden layers** using the **LogSigmoid** activation function.
+The loss-function weights are:
 
-The final layer has two outputs corresponding to the learned functions \(\alpha(r)\) and \(\beta(r)\).
+**W₀ = 10, W₁ = 10, W₂ = 0.001, W₃ = 10**
 
-Three configurations are studied using hidden-layer sizes of:
+The boundary condition enforces the appropriate asymptotic behavior of the metric at large radial distance.
+
+### Classical Neural Network
+
+The classical network contains **six hidden layers** and uses the **LogSigmoid** activation function.
+
+The final layer predicts the metric functions used in the Schwarzschild solution.
+
+Three classical configurations are evaluated:
 
 | Configuration | Hidden-layer size |
 |---|---:|
@@ -174,298 +166,157 @@ Three configurations are studied using hidden-layer sizes of:
 
 The classical learning rate is **0.0005**.
 
-### Quantum neural network
+### Quantum Neural Network
 
 The QNN uses **two qubits**.
 
-Before quantum encoding, the radial input is scaled by dividing by 100. The feature-map design is motivated by the approximately \(1/r\)-type behavior of the Schwarzschild solution.
+The radial input is rescaled before being encoded into the quantum circuit. The feature-map design is motivated by the approximate inverse-radial behavior appearing in the Schwarzschild solution.
 
-The model uses a trainable feature map followed by a variational circuit containing \(R_Y\) rotations and CNOT entanglement. An inverse-sine transformation is applied to the measured output to increase the model's nonlinear representational capability.
+The circuit contains trainable rotations and CNOT entangling operations. A nonlinear post-processing transformation is applied to the measured quantum output.
 
 The quantum learning rate is **0.025**.
 
-### Hybrid quantum neural network
+### Hybrid Quantum Neural Network
 
-The HQNN combines a classical neural network with a quantum component and a final classical layer.
+The HQNN combines classical and quantum components and uses a three-qubit quantum circuit.
 
-The architecture is adapted to the coupled structure of the Einstein equations and uses a three-qubit quantum circuit. Classical outputs are encoded into the quantum circuit, processed by variational and entangling layers, and passed to a final classical layer.
+The classical part processes the radial coordinate before encoding the resulting information into the quantum circuit. The measured quantum outputs are then processed classically to obtain the final prediction.
 
-For the Schwarzschild problem, the hybrid model achieved the highest overall prediction accuracy in the paper's comparison based on the relevant metric components, although the classical model achieved lower MSE values for the individual metric components across the evaluated seeds.
+The hybrid architecture is designed to represent the coupled structure of the metric functions and the underlying Einstein equations.
+
+### Main Observation
+
+The relative performance of the models depends on the metric component and the initialization.
+
+The paper reports that the HQNN can achieve strong overall prediction accuracy, while the classical network can obtain lower MSE values for individual metric components in the evaluated configurations. This demonstrates that model comparison should not rely on a single metric alone.
 
 ---
 
 # 3. Time-Independent Schrödinger Equation
 
-The third problem considers a particle in a **two-dimensional infinite potential box** and solves the time-independent Schrödinger equation as an eigenvalue problem.
+The third problem considers a particle in a **two-dimensional infinite potential box**.
 
-Unlike the first two problems, this problem uses an **unsupervised neural-network formulation based on a shooting-method approach**.
+Unlike the first two problems, this problem is treated using an **unsupervised neural-network approach based on the shooting method**.
 
-The method is designed to obtain both the wave function and the corresponding energy eigenvalue.
+The method is designed to determine both the wave function and its associated energy eigenvalue.
 
-## Unsupervised shooting-based approach
+## Unsupervised Shooting-Based Approach
 
-The loss function is constructed from the Schrödinger equation and a normalization condition rather than introducing additional loss terms specifically constraining individual excited states.
+The optimization is performed using the Schrödinger equation and normalization conditions rather than supervised target data.
 
-The approach allows the optimization to start from an energy estimate and move toward different eigenstates. The formulation is particularly useful for studying the first several energy levels of the two-dimensional box.
+The approach is used to investigate the low-lying energy states of the two-dimensional box.
 
-### Classical neural network
+### Classical Neural Network
 
-The classical implementation uses a neural architecture for representing the wave function together with a separate mechanism for predicting the energy.
+The classical model represents the wave function and energy using neural-network-based functions.
 
-The study evaluates hidden-layer sizes of:
+Three configurations are investigated using hidden-layer sizes of:
 
 - 10 neurons;
 - 30 neurons;
 - 50 neurons.
 
-The classical learning rate for this problem is **0.002**.
+The classical learning rate is **0.002**.
 
-The first three energy levels are investigated.
+The study investigates the first three energy levels.
 
-### Quantum neural network
+### Quantum Neural Network
 
-The quantum model uses **three qubits**.
+The QNN uses **three qubits**.
 
-The first two qubits represent the spatial wave-function output, while the third qubit is used for energy prediction.
+The quantum circuit encodes the spatial variables and the energy-related input using `RY` rotations and controlled operations.
 
-The inputs \(x\), \(y\), and \(\lambda\) are encoded into corresponding \(R_Y\) rotations. Controlled operations introduce correlations between the energy prediction and the spatial wave function.
+The feature-map design is chosen to represent the oscillatory behavior expected for the wave functions of a particle in an infinite potential box.
 
-The physics-informed circuit design reflects the oscillatory structure expected for a particle in a two-dimensional infinite potential well.
-
-The feature-map parameters are initialized in the range
-
-\[
-[3,3.5],
-\]
-
-which was selected to provide sufficient oscillatory behavior for representing excited states.
+The quantum feature-map parameters are initialized in the range **[3, 3.5]**.
 
 The QNN learning rate is **0.05**.
 
-### Hybrid quantum neural network
+### Hybrid Quantum Neural Network
 
-The HQNN combines classical and quantum components and produces the wave-function representation and energy prediction through separate classical/quantum pathways.
+The HQNN combines classical processing with a quantum circuit and is used to predict the spatial wave function and the corresponding energy.
 
-The quantum parameters are initialized from a normal distribution with mean 0 and standard deviation 0.2, while the classical component uses Xavier initialization.
+The quantum parameters are initialized using a normal distribution, while the classical parameters use Xavier initialization.
 
-The learning rate for the hybrid model is **0.005**.
+The hybrid learning rate is **0.005**.
 
-The study evaluates the first three energy levels. The hybrid architecture performs well for the ground and first excited states but does not successfully predict the second excited state in the reported experiments. The QNN also shows optimization difficulties for some excited-state configurations, including extended flat regions in the loss landscape.
+The model is tested on the first three energy levels.
+
+### Main Observation
+
+The quantum and hybrid approaches can represent the ground state and low-lying excited states, but optimization becomes increasingly difficult for higher excited states.
+
+In the reported experiments, the hybrid model successfully predicts the ground and first excited states but does not successfully predict the second excited state. The quantum models also exhibit increased optimization difficulty for some excited-state configurations.
 
 ---
 
-# Neural Network Paradigms
-
-The repository contains three broad model classes.
+# Neural Network Architectures
 
 ## Classical Neural Networks
 
-The classical models are conventional feedforward neural networks used within a physics-informed learning framework.
+The classical models are feedforward neural networks embedded within physics-informed or unsupervised learning frameworks.
 
-Their outputs are used to construct approximate solutions to the governing differential equations, while automatic differentiation is used to evaluate the required derivatives and residuals.
+The networks learn the solution functions while the loss functions incorporate the governing differential equations and relevant physical constraints.
+
+Automatic differentiation is used to calculate the required derivatives.
+
+---
 
 ## Quantum Neural Networks
 
-The QNNs are composed of three main components:
+The QNNs consist of three main stages:
 
-1. **Quantum feature map**
-2. **Variational quantum circuit**
-3. **Quantum measurement**
+**Quantum feature map → Variational quantum circuit → Measurement**
 
-The general quantum state can be represented as
+The general circuit structure can be summarized as:
 
-\[
-|\phi(X,\hat{\theta}_1,\hat{\theta}_2)\rangle
-=
-W(\hat{\theta}_2)
-U(X,\hat{\theta}_1)
-|0\rangle^{\otimes n},
-\]
+**Input data → Quantum encoding → Trainable quantum layers → Measurement → Model output**
 
-where \(U\) is the feature-map circuit and \(W\) is the trainable variational circuit.
+The quantum feature maps are designed specifically for the physical problem rather than using a single generic encoding for all experiments.
 
-The network output is obtained from quantum measurements, using Pauli-\(Z\) expectation values and trainable scaling parameters.
-
-A central design principle of the work is the use of **physics-informed quantum feature maps**. Rather than using the same generic encoding for every problem, the feature map is selected according to the expected qualitative behavior of the physical solution.
+The study introduces **three variational parameterized quantum feature maps** and investigates different quantum configurations across the problems.
 
 Examples include:
 
-- exponential encoding for decay in the damped oscillator;
-- power-law-related encoding for the Schwarzschild problem; and
-- oscillatory \(R_Y\)-based encoding for the two-dimensional Schrödinger equation.
+- exponential encoding for the decaying behavior of the damped harmonic oscillator;
+- physics-motivated nonlinear encoding for the Schwarzschild problem; and
+- oscillatory `RY`-based encoding for the Schrödinger equation.
 
-## Hybrid Quantum-Classical Neural Networks
+---
 
-The hybrid architectures combine:
+## Hybrid Quantum Neural Networks
 
-\[
-\text{Classical Neural Network}
-\rightarrow
-\text{Quantum Circuit}
-\rightarrow
-\text{Classical Output Layer}.
-\]
+The hybrid architectures combine classical neural networks and quantum circuits.
 
-Classical outputs are encoded into the quantum circuit through trainable or data-dependent rotation gates. Measurements of the quantum circuit are subsequently processed by a classical layer.
+A typical hybrid structure can be represented as:
 
-The exact architecture varies between physical problems to accommodate their different mathematical structures.
+**Classical Neural Network → Quantum Circuit → Classical Output Layer**
+
+The precise architecture differs between the physical problems.
+
+Classical outputs are encoded into the quantum circuit through quantum rotation gates. The resulting quantum measurements are then processed to obtain the final model prediction.
+
+The paper introduces **two quantum-circuit architectures** for the hybrid models.
 
 ---
 
 # Training and Evaluation
 
-To provide a common comparison, each model type is tested under **three configurations**.
+Each model type is evaluated using **three configurations**.
 
 For the classical and hybrid models, the configurations correspond to hidden-layer sizes of:
 
-\[
-10,\;30,\;50.
-\]
+- 10;
+- 30;
+- 50.
 
 For the quantum models, the configurations correspond to:
 
-\[
-1,\;2,\;3
-\]
+- 1 variational layer;
+- 2 variational layers;
+- 3 variational layers.
 
-variational quantum layers.
-
-The models are evaluated using four random seeds:
-
-\[
-14,\;42,\;86,\;195.
-\]
-
-The main figures and detailed configuration comparisons in the paper use **seed 42**, while the statistical analysis across seeds reports the mean and standard deviation of the final errors.
-
-All models are optimized using the **Adam optimizer** with:
-
-\[
-\beta_1=0.9,
-\qquad
-\beta_2=0.99,
-\qquad
-\epsilon=10^{-8}.
-\]
-
-The models and hyperparameters were tuned within the available computational budget while maintaining comparable conditions across the three model paradigms. Because of computational constraints, relatively small training sets were used, while larger test sets were used to evaluate generalization over unseen inputs.
-
----
-
-# Implementation
-
-The neural networks were implemented using:
-
-- **Python**
-- **PyTorch**
-- **PennyLane**
-
-PyTorch is used for the classical neural-network and optimization components, while PennyLane provides the differentiable quantum-circuit implementations.
-
-The repository is organized around the three physical problems, with separate source-code notebooks, analysis notebooks, and trained-model directories.
-
----
-
-# Repository Structure
-
-```text
-.
-├── Damped Harmonic Oscillator/
-│   ├── source and analysis/
-│   │   ├── damped_harmonic_oscillator_source_code.ipynb
-│   │   ├── damped_harmonic_oscillator_analysis_seed42.ipynb
-│   │   └── mean_and_deviation_damped_harmonic_oscillator.ipynb
-│   └── trained_models/
-│       ├── classical damped harmonic oscillator/
-│       ├── quantum damped harmonic oscillator/
-│       └── hybrid damped harmonic oscillator/
-│
-├── Einstein Field Equations for Schwarzschild Metric/
-│   ├── source and analysis/
-│   │   ├── einstein_field_equations_source_code.ipynb
-│   │   ├── einstein_field_equations_analysis_seed42.ipynb
-│   │   └── mean_and_deviation_einstein_field_equations.ipynb
-│   └── trained_models/
-│
-├── Time-Independent Schrödinger Equation for Particle
-│   in a Two Dimensional Box/
-│   ├── source and analysis/
-│   │   ├── time-independent_schrödinger_source_code.ipynb
-│   │   ├── time-independent_schrödinger_ analysis_seed42.ipynb
-│   │   └── mean_and_deviation_time-independent_schrödinger.ipynb
-│   └── trained_models/
-│
-├── CITATION.cff
-├── LICENSE
-└── README.md
-```
-
-The repository currently contains dedicated source and analysis notebooks for each of the three problems. The damped-oscillator and Einstein-equation directories, for example, separately provide source-code, seed-42 analysis, and mean/deviation notebooks.
-
----
-
-# Notebook Organization
-
-For each problem, the repository separates the computational workflow into three main notebook types.
-
-### Source-code notebook
-
-The source-code notebook contains the model definitions, quantum circuits, training procedure, loss functions, and numerical implementation used for the corresponding problem.
-
-### Seed-42 analysis notebook
-
-The analysis notebook focuses on the detailed evaluation corresponding to the main seed-42 results presented in the paper.
-
-### Mean-and-deviation notebook
-
-The mean-and-deviation notebook evaluates the models across the four random seeds and is used to obtain the statistical comparison of model errors.
-
-For example, the damped harmonic oscillator directory contains:
-
-- `damped_harmonic_oscillator_source_code.ipynb`
-- `damped_harmonic_oscillator_analysis_seed42.ipynb`
-- `mean_and_deviation_damped_harmonic_oscillator.ipynb`
-
-The corresponding structure is used for the Einstein field equations and Schrödinger-equation experiments.
-
----
-
-# Reproducing the Experiments
-
-The notebooks are intended to provide the computational implementation associated with the published study.
-
-A typical workflow is:
-
-1. Clone the repository.
-2. Install the required Python dependencies.
-3. Open the source-code notebook for the problem of interest.
-4. Run the notebook to initialize the model and training procedure.
-5. Use the corresponding analysis notebook to reproduce the evaluation and visualizations.
-6. Use the mean-and-deviation notebook to evaluate robustness across the four random seeds.
-
-Example:
-
-```bash
-git clone https://github.com/NavidMKZ/Evaluating-the-performance-of-classical-quantum-and-hybrid-NNs-in-solving-differential-equations.git
-
-cd Evaluating-the-performance-of-classical-quantum-and-hybrid-NNs-in-solving-differential-equations
-```
-
-The notebooks can then be opened using Jupyter Notebook or JupyterLab.
-
-```bash
-jupyter notebook
-```
-
-Because the original experiments involve differentiable quantum circuits and repeated model training, execution time depends on the available classical hardware and the selected configuration.
-
----
-
-# Reproducibility Considerations
-
-The experiments were deliberately evaluated under multiple random initializations.
-
-The four seeds used throughout the study are:
+The experiments are evaluated using the following four random seeds:
 
 ```text
 14
@@ -474,79 +325,244 @@ The four seeds used throughout the study are:
 195
 ```
 
-Seed 42 is used for the detailed representative plots and configuration comparisons, while the mean and standard deviation across all four seeds provide a broader assessment of robustness.
+Seed 42 is used for the detailed representative analysis, while the results across all four seeds are used to evaluate the mean and standard deviation of the model errors.
 
-The results demonstrate that initialization can substantially influence optimization. In particular, the quantum models show greater variability across different problems and initializations than the classical models. Consequently, individual best-case results should not be interpreted as universally representative of all initializations.
+All models use the **Adam optimizer**.
+
+The Adam parameters are:
+
+```text
+β₁ = 0.9
+β₂ = 0.99
+ε  = 10⁻⁸
+```
+
+The learning rate varies by model and physical problem as described in the corresponding sections above.
+
+---
+
+# Parameter Efficiency
+
+An important part of the comparison is the number of trainable parameters.
+
+The quantum and hybrid quantum neural networks use substantially fewer trainable parameters than the corresponding classical models in the investigated configurations.
+
+The study therefore evaluates not only prediction accuracy but also the parameter count required by each architecture.
+
+---
+
+# Convergence Behavior
+
+The study also compares the optimization behavior of the three model types.
+
+The reported results show that the quantum and hybrid models can converge faster than the classical models in the investigated experiments.
+
+However, convergence behavior depends on the problem and parameter initialization. Quantum models can also exhibit greater variability and optimization difficulties, particularly for some excited-state Schrödinger-equation configurations.
+
+---
+
+# Sensitivity to Parameter Initialization
+
+Parameter initialization has a substantial effect on all three model types.
+
+The experiments therefore use four different random seeds rather than relying on a single initialization.
+
+The reported results show that:
+
+- all three model classes are sensitive to initialization;
+- QNNs display the largest variability across the investigated problems;
+- individual best-case results should therefore not be interpreted as universally representative.
+
+This is an important consideration when comparing classical and quantum machine-learning models.
 
 ---
 
 # Main Findings
 
-The study shows that the relative performance of classical, quantum, and hybrid models depends strongly on the physical problem, architecture, and parameter initialization.
-
-The main observations are:
+The main conclusions of the study can be summarized as follows.
 
 ### Damped harmonic oscillator
 
-The QNN achieved the lowest reported MSE among the three paradigms for the representative seed-42 experiment. The HQNN also substantially improved on the classical model in that experiment.
+The QNN achieves the best accuracy in the representative seed-42 experiment.
 
 ### Einstein field equations
 
-The HQNN achieved the highest overall prediction accuracy when considering the relevant metric components together. At the same time, the classical network achieved lower MSE values for the individual metric components across the evaluated seeds. This illustrates why accuracy should be assessed using more than a single loss metric.
+Hybrid and classical models can both provide strong predictions, but their relative performance depends on the metric component and initialization.
 
 ### Time-independent Schrödinger equation
 
-The quantum and hybrid approaches can represent the ground and low-lying excited states, but optimization becomes more difficult for higher excited states. The reported hybrid models successfully identify the ground and first excited states but fail to predict the second excited state in the tested configurations.
+Quantum and hybrid approaches can reproduce low-lying energy states, while higher excited states present greater optimization challenges.
 
 ### Overall comparison
 
-Across the studied problems, the paper finds that QNNs and HQNNs can use fewer trainable parameters than the corresponding classical models and often exhibit rapid convergence. However, the quantum approaches also show greater sensitivity to initialization and can exhibit unstable or highly variable optimization behavior.
+The study finds that:
 
-The results therefore do **not** imply that quantum neural networks universally outperform classical neural networks. Rather, they demonstrate that physics-informed quantum and hybrid architectures can provide competitive or superior performance for particular differential-equation problems and configurations, while also introducing distinct optimization challenges.
+- QNNs and HQNNs can use fewer trainable parameters than classical models;
+- QNNs and HQNNs can converge faster in the investigated experiments;
+- QNNs can achieve particularly strong accuracy for the damped harmonic oscillator;
+- HQNNs achieve higher accuracy than classical models in most of the favorable-initialization cases reported in the paper;
+- quantum models are more sensitive to parameter initialization;
+- performance depends strongly on the physical problem and model configuration.
+
+The results therefore should **not** be interpreted as evidence that quantum neural networks universally outperform classical neural networks. Instead, they demonstrate that physics-informed quantum and hybrid architectures can be competitive and, under favorable conditions, superior for particular differential-equation problems.
 
 ---
 
 # Physics-Informed Quantum Feature Maps
 
-One of the central ideas explored in this work is that the quantum feature map should reflect the expected structure of the physical solution.
+A central idea of this work is to incorporate information about the underlying physical solution into the design of the quantum feature map.
 
-Instead of treating quantum encoding as a generic preprocessing operation, the approach incorporates prior physical knowledge into the circuit design.
+The general approach is:
 
-The general idea is:
+**Physical behavior → Feature-map design → Quantum representation → Variational optimization**
 
-\[
-\text{physical behavior}
-\longrightarrow
-\text{feature-map design}
-\longrightarrow
-\text{quantum representation}
-\longrightarrow
-\text{variational optimization}.
-\]
+This allows the quantum circuit to reflect known qualitative properties of the solution.
 
-Examples in this repository include:
+Examples studied in this work include:
 
-| Problem | Qualitative behavior | Feature-map strategy |
+| Physical problem | Relevant behavior | Feature-map idea |
 |---|---|---|
-| Damped harmonic oscillator | Exponential decay + oscillation | Exponential and \(R_Y\) encoding |
-| Schwarzschild metric | Approximately power-law / \(1/r\) behavior | Physics-motivated nonlinear encoding |
-| 2D Schrödinger equation | Oscillatory wave function | \(R_Y\)-based oscillatory encoding |
+| Damped harmonic oscillator | Exponential decay and oscillation | Exponential and `RY` encoding |
+| Schwarzschild metric | Approximate inverse-radial behavior | Physics-motivated nonlinear encoding |
+| 2D Schrödinger equation | Oscillatory wave function | Oscillatory `RY` encoding |
 
-This problem-specific design is intended to improve expressivity while keeping the circuits relatively small and compatible with simulation on classical hardware.
+The goal is to improve the representation of the target function while keeping the quantum circuits relatively small.
+
+---
+
+# Software and Libraries
+
+The implementation uses:
+
+- **Python**
+- **PyTorch**
+- **PennyLane**
+
+PyTorch is used for the classical neural-network and optimization components, while PennyLane is used to construct and differentiate the quantum circuits.
+
+---
+
+# Repository Structure
+
+The repository is organized around the three physical problems:
+
+```text
+.
+├── Damped Harmonic Oscillator/
+│   ├── source and analysis/
+│   └── trained_models/
+│
+├── Einstein Field Equations for Schwarzschild Metric/
+│   ├── source and analysis/
+│   └── trained_models/
+│
+├── Time-Independent Schrödinger Equation for Particle in a Two Dimensional Box/
+│   ├── source and analysis/
+│   └── trained_models/
+│
+├── CITATION.cff
+├── LICENSE
+└── README.md
+```
+
+The repository currently contains separate directories for the damped harmonic oscillator, Einstein field equations, and time-independent Schrödinger equation, each with source/analysis materials and trained models.
+
+---
+
+# Notebook Organization
+
+For each physical problem, the repository provides notebooks for the computational implementation and analysis.
+
+The general organization is:
+
+### Source-Code Notebook
+
+Contains the implementation of:
+
+- model architectures;
+- quantum circuits;
+- feature maps;
+- loss functions;
+- training procedures; and
+- numerical calculations.
+
+### Seed-42 Analysis Notebook
+
+Contains the detailed analysis associated with the representative seed-42 results.
+
+### Mean-and-Deviation Notebook
+
+Analyzes the results obtained using the four random seeds and calculates the corresponding statistical quantities.
+
+For example, the damped harmonic oscillator directory contains separate source, seed-42 analysis, and mean/deviation notebooks. The other two problem directories follow the same general organization.
+
+---
+
+# Reproducing the Experiments
+
+The notebooks in this repository provide the computational implementation used for the experiments reported in the paper.
+
+A typical workflow is:
+
+1. Clone the repository.
+2. Install Python and the required libraries.
+3. Open the source-code notebook for the selected physical problem.
+4. Run the model and training cells.
+5. Open the corresponding analysis notebook to reproduce the reported evaluations.
+6. Use the mean-and-deviation notebook to study the results across the four random seeds.
+
+## Clone the repository
+
+```bash
+git clone https://github.com/NavidMKZ/Evaluating-the-performance-of-classical-quantum-and-hybrid-NNs-in-solving-differential-equations.git
+```
+
+Then enter the repository:
+
+```bash
+cd Evaluating-the-performance-of-classical-quantum-and-hybrid-NNs-in-solving-differential-equations
+```
+
+The notebooks can be opened using Jupyter Notebook or JupyterLab.
+
+```bash
+jupyter notebook
+```
+
+Because the experiments involve neural-network optimization and differentiable quantum-circuit simulation, execution time depends on the available computational resources and the selected configuration.
+
+---
+
+# Reproducibility
+
+The experiments use four random seeds:
+
+```text
+14
+42
+86
+195
+```
+
+Using multiple seeds is important because all three model classes are sensitive to parameter initialization, with QNNs showing particularly strong variability in the reported experiments.
+
+The detailed seed-42 results provide a representative comparison, while the four-seed analysis gives a broader view of the robustness of the conclusions.
+
+The repository also includes trained-model directories corresponding to the investigated model configurations.
 
 ---
 
 # Limitations
 
-The results should be interpreted in the context of the experimental setup.
+The results should be interpreted within the scope of the experimental setup.
 
-The quantum circuits are intentionally small, and the experiments are performed using classical simulation rather than large-scale execution on fault-tolerant quantum hardware.
+The quantum circuits are relatively small and the experiments are performed using quantum-circuit simulation rather than large-scale fault-tolerant quantum hardware.
 
-The training datasets are relatively small because of computational limitations, while larger test sets are used to study generalization.
+The training datasets are also relatively small because of computational limitations.
 
-The results are also sensitive to parameter initialization. In particular, the QNNs can exhibit substantial variability between different random seeds and may encounter difficult optimization regions for some configurations and excited-state problems.
+In addition, the performance of the quantum and hybrid models depends significantly on parameter initialization, and some excited-state Schrödinger-equation configurations are difficult to optimize.
 
-Therefore, the purpose of this work is not to claim a universal computational advantage of quantum neural networks, but to investigate their accuracy, convergence behavior, parameter efficiency, and applicability to representative differential-equation problems.
+Therefore, the purpose of this work is **not** to claim a universal computational advantage for quantum neural networks. The purpose is to investigate how classical, quantum, and hybrid architectures compare for representative differential-equation problems under physics-informed and unsupervised learning frameworks.
 
 ---
 
@@ -562,14 +578,15 @@ If you find this code useful in your research, we kindly ask that you cite the a
   title   = {Evaluating the performance of classical, quantum, and hybrid quantum neural networks in solving differential equations},
   journal = {Scientific Reports},
   volume  = {15},
-  article-number = {39332},
+  number  = {1},
+  pages   = {39332},
   year    = {2025},
   doi     = {10.1038/s41598-025-22950-y},
   url     = {https://doi.org/10.1038/s41598-025-22950-y}
 }
 ```
 
-A `CITATION.cff` file is also included in this repository to provide structured citation metadata for the code and associated publication.
+A `CITATION.cff` file is included in this repository to provide structured citation information for the code and its associated publication.
 
 ---
 
@@ -581,15 +598,17 @@ Department of Physics, Isfahan University of Technology, Isfahan, Iran
 **Behrouz Mirza**  
 Department of Physics, Isfahan University of Technology, Isfahan, Iran
 
-For the complete author information and affiliations, please refer to the published article.
+For the complete author and affiliation information, please refer to the published article.
 
 ---
 
 # License
 
-The code in this repository is distributed under the **MIT License**. See the [`LICENSE`](LICENSE) file for the full license text.
+The code in this repository is distributed under the **MIT License**.
 
-The published article is separately subject to the license specified by the publisher. Please refer to the [Nature article](https://www.nature.com/articles/s41598-025-22950-y) for the applicable publication and reuse terms.
+See the [`LICENSE`](LICENSE) file for the complete license text.
+
+The published research article has its own publication license and reuse conditions. Please refer to the [published article](https://www.nature.com/articles/s41598-025-22950-y) for those terms.
 
 ---
 
@@ -601,6 +620,6 @@ The published article is separately subject to the license specified by the publ
 
 ---
 
-## Acknowledgment
+# Acknowledgment
 
-This repository accompanies the research presented in the published *Scientific Reports* article and is provided to facilitate inspection, reuse, and further research on classical, quantum, and hybrid neural-network approaches to differential equations.
+This repository accompanies the research presented in the published *Scientific Reports* article and is provided to facilitate inspection, reproduction, reuse, and further research on classical, quantum, and hybrid neural-network approaches to solving differential equations.

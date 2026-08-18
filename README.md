@@ -398,7 +398,7 @@ Quantum and hybrid approaches can reproduce low-lying energy states, while highe
 The study finds that:
 
 - QNNs and HQNNs can use fewer trainable parameters than classical models;
-- QNNs and HQNNs can converge faster in the investigated experiments;
+- QNNs and HQNNs can converge faster to the solutions in the investigated experiments;
 - QNNs can achieve particularly strong accuracy for the damped harmonic oscillator;
 - HQNNs achieve higher accuracy than classical models in most of the favorable-initialization cases reported in the paper;
 - quantum models are more sensitive to parameter initialization;

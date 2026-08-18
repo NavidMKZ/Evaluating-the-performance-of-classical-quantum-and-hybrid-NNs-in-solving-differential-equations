@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you find this code useful in your research, we kindly ask that you cite the associated paper."
+title: "Evaluating the performance of classical, quantum, and hybrid quantum neural networks in solving differential equations"
+type: software
+
+authors:
+  - family-names: "Markazi"
+    given-names: "Navid"
+  - family-names: "Mirza"
+    given-names: "Behrouz"
+
+repository-code: "https://github.com/NavidMKZ/Evaluating-the-performance-of-classical-quantum-and-hybrid-NNs-in-solving-differential-equations"
+url: "https://www.nature.com/articles/s41598-025-22950-y"
+license: "MIT"
+
+preferred-citation:
+  type: article
+  title: "Evaluating the performance of classical, quantum, and hybrid quantum neural networks in solving differential equations"
+  authors:
+    - family-names: "Markazi"
+      given-names: "Navid"
+    - family-names: "Mirza"
+      given-names: "Behrouz"
+  journal: "Scientific Reports"
+  year: 2025
+  volume: 15
+  issue: 1
+  article-number: 39332
+  doi: "10.1038/s41598-025-22950-y"
+  url: "https://doi.org/10.1038/s41598-025-22950-y"
